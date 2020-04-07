@@ -1,0 +1,17 @@
+java -version
+
+tar -xvzf ./solr-8.5.0.tgz -C {your_choosen_directory}
+
+export solr_home={your_choosen_directory}
+cd $solr_home
+
+bin/solr start -p 8983
+
+ls server/solr/configsets
+cd server/solr/configsets
+pwd
+
+cd $solr_home
+ls example/exampledocs
+cd example/exampledocs
+java -jar -Dc=tech_products post.jar *.xml 

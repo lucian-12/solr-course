@@ -1,0 +1,35 @@
+//get current schema fields
+curl -X GET "http://localhost:8983/solr/search_twitter/schema/fields"
+
+//add a document without unique key
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "content":"test"
+	}
+  }
+}'
+
+//get all documents from the index
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+//add a document with unique key to solr
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+    	"id":"1",
+      "content":"test"
+	}
+  }
+}'
+
+//change the solr schema manually
+cd $solr_home
+cd server/solr/configsets/search_twitter/conf 
+nano managed-schema 
+
+//realod a collection
+curl -X GET "http://localhost:8983/solr/admin/cores?action=RELOAD&core=search_twitter"
+

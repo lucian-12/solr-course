@@ -1,7 +1,7 @@
-//get current schema fields
+# get current schema fields
 curl -X GET "http://localhost:8983/solr/search_twitter/schema/fields"
 
-//replace definition of a field 
+# replace definition of a field 
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "replace-field":{
      "name":"updated_on",
@@ -9,7 +9,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
      "indexed":true }
 }' http://localhost:8983/api/cores/search_twitter/schema
 
-//add document to solr
+# add document to solr
 curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
 {
   "add": {
@@ -21,11 +21,11 @@ curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/sea
 }'
 
 
-//get documents which were updated after date
+# get documents which were updated after date
 curl -X GET "http://localhost:8983/solr/search_twitter/select?q=updated_on:\[2020-04-13T15:26:37Z%20TO%20*\]"
 
-//add a new field in solr, explicitly
-//--data-binary - This posts data exactly as specified with no extra processing whatsoever.
+# add a new field in solr, explicitly
+# --data-binary - This posts data exactly as specified with no extra processing whatsoever.
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":{
      "name":"indexed_on",
@@ -44,8 +44,8 @@ curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/sea
   }
 }'
 
-//get documents which were indexed after date
+# get documents which were indexed after date
 curl -X GET "http://localhost:8983/solr/search_twitter/select?q=indexed_on:\[2020-04-13T15:26:37Z%20TO%20*\]"
 
-//get all documents from the index
+# get all documents from the index
 curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"

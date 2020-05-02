@@ -1,0 +1,46 @@
+# add a new field which is not searchable
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"likes_count",
+     "type":"pint",
+     "indexed":false,
+     "stored":true
+  	 "docValues":false}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+# add a new field in solr, explicitly
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"user_name",
+     "type":"string",
+     "indexed":true,
+     "stored":true}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+# add a new field in solr, explicitly
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"lang",
+     "type":"string",
+     "indexed":true,
+     "stored":false,
+ 	 "docValues":false}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+# add document to solr
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "twitter_id":"4",
+        "user_name":"John",
+        "lang":"eng",
+        "content":"Happy searching!",
+        "likes_count":10
+	}
+  }
+}'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=user_name:John"
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=lang:eng"
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=likes_count:10"

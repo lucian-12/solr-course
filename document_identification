@@ -1,0 +1,9 @@
+# Add the same document X2
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "content":"test"
+	}
+  }
+}'

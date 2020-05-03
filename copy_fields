@@ -1,0 +1,46 @@
+# add catch_all field <field name="catch_all" type="text_en" indexed="true" stored="false" multiValued="true"/>
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"catch_all",
+     "type":"text_en",
+     "indexed":true,
+     "stored":false,
+     "multiValued":true }
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-copy-field":{
+     "source":"user_name",
+     "dest":[ "catch_all" ]}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-copy-field":{
+     "source":"content",
+     "dest":[ "catch_all" ]}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-copy-field":{
+     "source":"links",
+     "dest":[ "catch_all" ]}
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+    	"twitter_id":8
+        "user_name":"apache",
+        "content": "Happy searching!",
+        "links": "https://lucene.apache.org/solr",
+        "links": "https://lucene.apache.org"
+	}
+  }
+}'
+
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=apache&df=catch_all"
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=solr&df=catch_all"
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=happy&df=catch_all"

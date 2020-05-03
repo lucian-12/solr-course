@@ -1,0 +1,46 @@
+# add dynamic field <dynamicField name="*_string" type="string" indexed="true" stored="true" />
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-dynamic-field":{
+     "name":"*_string",
+     "type":"string",
+     "indexed":true,
+     "stored":true
+     }
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+    	"twitter_id":6
+        "user_name_string":"Bob",
+        "type_string": "post",
+        "lang_string": "eng"
+	}
+  }
+}'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=lang_string:eng"
+
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-dynamic-field":{
+     "name":"*_texts",
+     "type":"text_general",
+     "indexed":true,
+     "stored":true,
+     "multiValued":true 
+     }
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "twitter_id":7
+        "link_texts": "https://lucene.apache.org/solr",
+        "link_texts": "https://lucene.apache.org"
+	}
+  }
+}'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=link_texts:solr"

@@ -1,0 +1,23 @@
+# add a multiValue field
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "add-field":{
+     "name":"links",
+     "type":"text_general",
+     "indexed":true,
+     "stored":true,
+     "multiValued":true }
+}' http://localhost:8983/api/cores/search_twitter/schema
+
+# add a document with a multiValue field
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "twitter_id":5
+        "links": "https://lucene.apache.org/solr",
+        "links": "https://lucene.apache.org"
+	}
+  }
+}'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=links:solr"  

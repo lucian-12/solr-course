@@ -1,0 +1,67 @@
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+# delete documents by query
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+	"delete": {"query": "*:*"}
+}'
+
+# add an array of documents
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+	 "add": {
+	 	"overwrite": false, 
+	 	"commitWithin": 5000,
+	    "doc": {
+	        "twitter_id" : "9",
+	        "user_name_string" : "Solr",
+	        "type_string" : "post",
+	        "lang_string" : "en",
+	        "updated_on_pdt" : "2019-12-30T09:30:22Z",
+	        "likes_count_pint" : 10,
+	        "text_en" : "Happy Searching!",
+	        "link_strings" : ["https://github.com/apache/lucene-solr",
+	                    "https://lucene.apache.org/solr/"]
+	    }
+	},
+	"add": {
+	    "doc": {
+	        "twitter_id" : "10",
+	        "user_name_string" : "Solr",
+	        "type_string" : "post",
+	        "lang_string" : "en",
+	        "updated_on_pdt" : "2019-12-30T09:30:22Z",
+	        "likes_count_pint" : 10,
+	        "text_en" : "Happy Searching!",
+	        "link_strings" : ["https://github.com/apache/lucene-solr",
+	                    "https://lucene.apache.org/solr/"]
+	    }
+	},
+	"add": {
+	    "doc": {
+	        "twitter_id" : "11",
+	        "user_name_string" : "Solr",
+	        "type_string" : "post",
+	        "lang_string" : "en",
+	        "updated_on_pdt" : "2019-12-30T09:30:22Z",
+	        "likes_count_pint" : 10,
+	        "text_en" : "Happy Searching!",
+	        "link_strings" : ["https://github.com/apache/lucene-solr",
+	                    "https://lucene.apache.org/solr/"]
+	    }
+	}
+}'
+
+# delete document by id
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+	 "delete": ["9","10"]
+}'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+# delete documents by query
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+	"delete": {"query": "user_name_string:Solr"}
+}'

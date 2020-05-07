@@ -1,0 +1,33 @@
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "twitter_id":"1",
+        "content":"Late night with Solr 8.5",
+        "seen_i":8000
+	}
+  }
+}'
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+  "add": {
+    "doc": {
+        "twitter_id":"1",
+        "content":"Late night with Solr 8.5",
+        "seen_i":2147483649
+	}
+  }
+}'
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+cd $SOLR_HOME
+cd server/solr/configsets
+mkdir search_twitter_clone
+cp -r search_twitter/conf/. search_twitter_clone/conf
+
+# create solr core with default configs
+curl -X GET 'http://localhost:8983/solr/admin/cores?action=CREATE&name=search_twitter_clone&instanceDir=configsets/search_twitter_clone'
+
+curl -X GET 'http://localhost:8983/solr/admin/cores?action=SWAP&core=core-name&other=other-core-name

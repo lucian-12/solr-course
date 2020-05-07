@@ -1,0 +1,47 @@
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{ 
+        "delete": {"query": "*:*"}
+}'                                                    
+
+
+# add nested documents
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+[{
+    "twitter_id": "5",
+    "title_txt": "New Lucene and Solr release is out",
+    "type_string": "post",
+    "_childDocuments_": [
+      {
+        "twitter_id": "6",
+        "type_string": "comment",
+        "content_txt": "Lots of new features"
+      }
+    ]
+  },
+  {
+    "twitter_id": "7",
+    "title_txt": "Solr adds join support",
+    "type_string": "post",
+    "comments_string": [{
+        "twitter_id": "8",
+        "type_string": "comment",
+        "content_txt": "SolrCloud supports it too!"
+      },
+      {
+        "twitter_id": "9",
+        "type_string": "comment",
+        "content_txt": "New filter syntax"
+      }
+    ]
+  }
+]'
+
+curl -X GET http://localhost:8983/solr/search_twitter/query -d 'q={!child of="type_string:post"}title_txt:"Lucene"'
+
+curl -X GET "http://localhost:8983/solr/search_twitter/select?q=*:*"
+
+# delete document chidlren ..nothing happens
+curl -X POST -H 'Content-Type: application/json' 'http://localhost:8983/solr/search_twitter/update?commitWithin=100' --data-binary '
+{
+   "delete": ["8","9"]
+}'

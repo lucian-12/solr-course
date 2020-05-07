@@ -1,0 +1,13 @@
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=manu"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=manu&facet.field=popularity"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=price"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=manu&facet.range=price&f.price.facet.range.start=0&f.price.facet.range.end=500&f.price.facet.range.gap=100"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=manu&fq=price:\[100%20TO%20200\]"
+
+curl -X GET "http://localhost:8983/solr/tech_products/select?q=memory&facet=true&facet.field=manu&fq=price:\[100%20TO%20200\]&popularity=7"
